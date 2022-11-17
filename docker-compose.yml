@@ -1,4 +1,5 @@
 # Docker compose start container with env variables
+version: "3"
 services:
   local-db:
     image: postgres
@@ -23,6 +24,8 @@ services:
     ports:
       - "8080:8080"
     restart: on-failure
+    labels:
+      kompose.service.type: LoadBalancer # need this for k8s
     depends_on:
       - local-db
 
@@ -34,6 +37,8 @@ services:
       - API_URL=http://api-server:8080
     ports:
       - "80:80"
+    labels:
+      kompose.service.type: LoadBalancer # need this for k8s
     depends_on:
       - api-server
 # volumes:
