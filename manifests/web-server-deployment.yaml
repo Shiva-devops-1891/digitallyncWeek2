@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+    kompose.service.type: LoadBalancer
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: web-server
+  name: web-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: web-server
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+        kompose.service.type: LoadBalancer
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: web-server
+    spec:
+      containers:
+      - env:
+        - name: API_URL
+          value: http://api-server:8080
+        - name: MODE
+          value: local
+        image: konamarsacrdemo.azurecr.io/lms-web:latest
+        imagePullPolicy: ""
+        name: web-server
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}
