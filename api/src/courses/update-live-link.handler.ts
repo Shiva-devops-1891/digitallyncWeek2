@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
+import cacheKeys from "../common/cache-keys";
 import { db } from "../common/db";
+import redisClient from "../common/redis-client";
 import { IdSchema } from "../common/zod-schemas";
 
 export const updateLiveLinkHandler: RequestHandler = async (req, res, next) => {
@@ -17,6 +19,9 @@ export const updateLiveLinkHandler: RequestHandler = async (req, res, next) => {
         liveLink,
       },
     });
+
+    // Invalidate cache
+    await redisClient.del(cacheKeys.enrolledCourses);
 
     res.sendStatus(204);
   } catch (error) {

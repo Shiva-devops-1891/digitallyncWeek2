@@ -1,4 +1,5 @@
 import { MakeGenerics, Navigate, Route } from "@tanstack/react-location";
+import Loader from "./components/Loader";
 import { getAllCourses } from "./hooks/useGetAllCourses";
 import { getCourse } from "./hooks/useGetCourse";
 import { getCourses } from "./hooks/useGetCourses";
@@ -29,6 +30,9 @@ export const routes: Route<LocationGenerics>[] = [
         (await queryClient.fetchQuery(["getCourses"], () => getCourses()))
       );
     },
+    pendingMinMs: 1000,
+    pendingMs: 1000,
+    pendingElement: <Loader />,
   },
   {
     path: "admin",

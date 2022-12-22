@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
+import cacheKeys from "../common/cache-keys";
 import { db } from "../common/db";
+import redisClient from "../common/redis-client";
 import { IdSchema } from "../common/zod-schemas";
 
 const updateCourseSchema = z.object({
@@ -24,6 +26,9 @@ export const updateCourseHandler: RequestHandler = async (req, res, next) => {
       },
       data: data,
     });
+
+    // Invalidate cache
+    await redisClient.del(cacheKeys.enrolledCourses);
 
     return res.sendStatus(200);
   } catch (error) {

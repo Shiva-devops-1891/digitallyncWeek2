@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
+import cacheKeys from "../common/cache-keys";
 import { db } from "../common/db";
+import redisClient from "../common/redis-client";
 
 export const createCourseSchema = z.object({
   title: z.string().min(1),
@@ -21,6 +23,8 @@ export const createCourseHandler: RequestHandler = async (req, res, next) => {
     const course = await db.course.create({
       data,
     });
+    // Invalidate cache
+    await redisClient.del(cacheKeys.enrolledCourses);
     res.status(201).json({
       id: course.id,
       title: course.title,
