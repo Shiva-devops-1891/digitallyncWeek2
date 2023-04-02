@@ -14,7 +14,9 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 # This is required to make nginx serve index.html for all routes
 COPY nginx.conf /etc/nginx/conf.d/default.conf 
+COPY cert.crt key.key /etc/nginx/
 EXPOSE 80
+EXPOSE 443
 # If you add a custom CMD in the Dockerfile, be sure to include -g daemon off; 
 # in the CMD in order for nginx to stay in the foreground, so that Docker can 
 # track the process properly (otherwise your container will stop immediately after starting)!
